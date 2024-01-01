@@ -108,6 +108,33 @@ bool dealerTurn(Player& dealer, Deck& deck)
 	return false;
 }
 
+void ignoreLine() { std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); }
+
+bool playerTurn(Player& player, Deck& deck)
+{
+	while (true)
+	{
+		std::cout << "(h) to hit, or (s) to stand: ";
+		char hitOrStand{};
+		std::cin >> hitOrStand;
+		if (hitOrStand == 's') break;
+		if (hitOrStand == 'h')
+		{
+			Card nextCard{ deck.dealCard() };
+			player.score += nextCard.value();
+			std::cout << "You were dealt " << nextCard
+				<< ". You now have: " << player.score << '\n';
+		}
+		ignoreLine();
+		if (player.score > Setting::bustValue)
+		{
+			std::cout << "You went bust!\n";
+			return true;
+		}
+	}
+	return false;
+}
+
 bool play()
 {
 	Deck deck{};
@@ -116,6 +143,8 @@ bool play()
 	std::cout << "The dealer is showing: " << dealer.score << '\n';
 	Player player{ deck.dealCard().value() + deck.dealCard().value() };
 	std::cout << "You have score: " << player.score << '\n';
+	if (playerTurn(player, deck))
+		return false;
 	if (dealerTurn(dealer, deck))
 		return true;
 	return player.score > dealer.score;
