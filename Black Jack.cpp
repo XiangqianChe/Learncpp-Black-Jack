@@ -3,6 +3,11 @@
 #include <cassert>
 #include <algorithm>
 #include "Random.h"
+namespace Setting
+{
+	constexpr int bustValue{ 21 };
+	constexpr int stopValue{ 17 };
+}
 
 struct Card
 {
@@ -86,6 +91,23 @@ struct Player
 	int score{};
 };
 
+bool dealerTurn(Player& dealer, Deck& deck)
+{
+	while (dealer.score < Setting::stopValue)
+	{
+		Card nextCard{ deck.dealCard() };
+		dealer.score += nextCard.value();
+		std::cout << "The dealer flips a " << nextCard
+			<< ". They now have: " << dealer.score << '\n';
+	}
+	if (dealer.score > Setting::bustValue)
+	{
+		std::cout << "The dealer went bust!\n";
+		return true;
+	}
+	return false;
+}
+
 bool play()
 {
 	Deck deck{};
@@ -94,6 +116,8 @@ bool play()
 	std::cout << "The dealer is showing: " << dealer.score << '\n';
 	Player player{ deck.dealCard().value() + deck.dealCard().value() };
 	std::cout << "You have score: " << player.score << '\n';
+	if (dealerTurn(dealer, deck))
+		return true;
 	return player.score > dealer.score;
 }
 
