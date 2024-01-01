@@ -81,13 +81,26 @@ private:
 	std::size_t m_nextCardIndex{};
 };
 
-int main()
+struct Player
+{
+	int score{};
+};
+
+bool play()
 {
 	Deck deck{};
-	std::cout << deck.dealCard() << ' ' << deck.dealCard() << ' ' << deck.dealCard() << '\n';
-
 	deck.shuffle();
-	std::cout << deck.dealCard() << ' ' << deck.dealCard() << ' ' << deck.dealCard() << '\n';
+	Player dealer{ deck.dealCard().value() };
+	std::cout << "The dealer is showing: " << dealer.score << '\n';
+	Player player{ deck.dealCard().value() + deck.dealCard().value() };
+	std::cout << "You have score: " << player.score << '\n';
+	return player.score > dealer.score;
+}
+
+int main()
+{
+	bool playerWin(play());
+	std::cout << "You " << (playerWin ? "win" : "lose") << "!\n";
 
 	return 0;
 }
