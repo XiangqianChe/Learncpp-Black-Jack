@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <array>
+#include <cassert>
 
 struct Card
 {
@@ -61,8 +62,14 @@ public:
 			for (auto rank : Card::allRanks)
 				m_cards[count++] = Card{ rank, suit };
 	}
+	Card dealCard()
+	{
+		assert(m_nextCardIndex == std::size(m_cards) && "Cards run out");
+		return m_cards[m_nextCardIndex++];
+	}
 private:
 	std::array<Card, 52> m_cards{};
+	std::size_t m_nextCardIndex{};
 };
 
 int main()
