@@ -1,6 +1,8 @@
 ﻿#include <iostream>
 #include <array>
 #include <cassert>
+#include <algorithm>
+#include "Random.h"
 
 struct Card
 {
@@ -62,9 +64,16 @@ public:
 			for (auto rank : Card::allRanks)
 				m_cards[count++] = Card{ rank, suit };
 	}
+
+	void shuffle()
+	{
+		std::shuffle(m_cards.begin(), m_cards.end(), Random::mt);
+		m_nextCardIndex = 0;
+	}
+
 	Card dealCard()
 	{
-		assert(m_nextCardIndex == std::size(m_cards) && "Cards run out");
+		assert(m_nextCardIndex != std::size(m_cards) && "Cards run out");
 		return m_cards[m_nextCardIndex++];
 	}
 private:
@@ -74,5 +83,11 @@ private:
 
 int main()
 {
+	Deck deck{};
+	std::cout << deck.dealCard() << ' ' << deck.dealCard() << ' ' << deck.dealCard() << '\n';
+
+	deck.shuffle();
+	std::cout << deck.dealCard() << ' ' << deck.dealCard() << ' ' << deck.dealCard() << '\n';
+
 	return 0;
 }
