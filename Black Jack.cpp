@@ -32,9 +32,15 @@ struct Card
 
     Rank rank{};
     Suit suit{};
-    static constexpr std::array ranks{ rank_ace, rank_2, rank_3, rank_4, rank_5, rank_6,
+    static constexpr std::array allRanks{ rank_ace, rank_2, rank_3, rank_4, rank_5, rank_6,
         rank_7, rank_8, rank_9, rank_10, rank_jack, rank_queen, rank_king };
-    static constexpr std::array suits{ suit_club, suit_diamond, suit_heart, suit_spade };
+    static constexpr std::array allSuits{ suit_club, suit_diamond, suit_heart, suit_spade };
+
+    int value() const
+    {
+        static constexpr std::array RankValues{ 11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 };
+        return RankValues[rank];
+    }
 
     friend std::ostream& operator<<(std::ostream& out, const Card& card)
     {
@@ -47,6 +53,15 @@ struct Card
 
 int main()
 {
-  
+    // Print one card
+    Card card{ Card::rank_5, Card::suit_heart };
+    std::cout << card << '\n';
+
+    // Print all cards
+    for (auto suit : Card::allSuits)
+        for (auto rank : Card::allRanks)
+            std::cout << Card{ rank, suit } << ' ';
+    std::cout << '\n';
+
     return 0;
 }
